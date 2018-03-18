@@ -343,8 +343,10 @@ public class PartitionManager {
                             "name", _topoConf.get(Config.TOPOLOGY_NAME)))
                     .put("offset", lastCompletedOffset)
                     .put("partition", _partition.partition)
-                    .put("broker", ImmutableMap.of("host", _partition.host.host,
-                            "port", _partition.host.port))
+                    .put("broker", ImmutableMap.of("host",
+                            _partition.host.getHost(),
+                            "port",
+                            _partition.host.getPort()))
                     .put("topic", _partition.topic).build();
             _state.writeJSON(committedPath(), data);
 

@@ -242,7 +242,7 @@ public class KafkaSpout extends BaseRichSpout {
             StringBuilder leaderHosts = new StringBuilder();
             for (Partition partition: partitions) {
                 staticPartitions.append(partition.partition + ",");
-                leaderHosts.append(partition.host.host + ":" + partition.host.port).append(",");
+                leaderHosts.append(partition.host.getHost() + ":" + partition.host.getPort()).append(",");
             }
             configuration.put(configKeyPrefix + "partitions", staticPartitions.toString());
             configuration.put(configKeyPrefix + "leaders", leaderHosts.toString());

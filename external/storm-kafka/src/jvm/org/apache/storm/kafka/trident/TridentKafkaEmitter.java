@@ -94,7 +94,7 @@ public class TridentKafkaEmitter {
                 ret.put("offset", lastMeta.get("nextOffset"));
                 ret.put("nextOffset", lastMeta.get("nextOffset"));
                 ret.put("partition", partition.partition);
-                ret.put("broker", ImmutableMap.of("host", partition.host.host, "port", partition.host.port));
+                ret.put("broker", ImmutableMap.of("host", partition.host.getHost(), "port", partition.host.getPort()));
                 ret.put("topic", partition.topic);
                 ret.put("topology", ImmutableMap.of("name", _topologyName, "id", _topologyInstanceId));
                 return ret;
@@ -141,7 +141,7 @@ public class TridentKafkaEmitter {
         newMeta.put("nextOffset", endoffset);
         newMeta.put("instanceId", _topologyInstanceId);
         newMeta.put("partition", partition.partition);
-        newMeta.put("broker", ImmutableMap.of("host", partition.host.host, "port", partition.host.port));
+        newMeta.put("broker", ImmutableMap.of("host", partition.host.getHost(), "port", partition.host.getPort()));
         newMeta.put("topic", partition.topic);
         newMeta.put("topology", ImmutableMap.of("name", _topologyName, "id", _topologyInstanceId));
         LOG.debug("[transaction = {}], [newMeta = {}]", attempt, newMeta);

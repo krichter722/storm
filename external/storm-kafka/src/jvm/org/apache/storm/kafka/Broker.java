@@ -22,8 +22,12 @@ import com.google.common.base.Objects;
 import java.io.Serializable;
 
 public class Broker implements Serializable, Comparable<Broker> {
-    public String host;
-    public int port;
+    /**
+     * The default port to use.
+     */
+    public static final int PORT_DEFAULT = 9092;
+    private String host;
+    private int port;
 
     // for kryo compatibility
     private Broker() {
@@ -36,7 +40,23 @@ public class Broker implements Serializable, Comparable<Broker> {
     }
 
     public Broker(String host) {
-        this(host, 9092);
+        this(host, PORT_DEFAULT);
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     @Override
@@ -61,6 +81,12 @@ public class Broker implements Serializable, Comparable<Broker> {
         return host + ":" + port;
     }
 
+    /**
+     * Parses a string to contruct a broker.
+     * @param host the string in the form of {@code [host]} or
+     * {@code [host]:[port]}
+     * @return the constructed broker
+     */
     public static Broker fromString(String host) {
         Broker hp;
         String[] spec = host.split(":");
