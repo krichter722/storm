@@ -21,51 +21,85 @@ import com.google.common.base.Objects;
 
 import java.io.Serializable;
 
+/**
+ * A Kafka broker.
+ *
+ * @author unknown
+ */
 public class Broker implements Serializable, Comparable<Broker> {
     /**
      * The default port to use.
      */
     public static final int PORT_DEFAULT = 9092;
-    private String host;
-    private int port;
+    /**
+     * The host to connect to.
+     */
+    private final String host;
+    /**
+     * The port to connect to.
+     */
+    private final int port;
 
-    // for kryo compatibility
+    /**
+     * Constructs and invalid empty Broker. This constructor is only provided
+     * for reflection access by frameworks like kryo.
+     */
     private Broker() {
-	
-    }
-    
-    public Broker(String host, int port) {
-        this.host = host;
-        this.port = port;
+        this(null,
+                0);
     }
 
-    public Broker(String host) {
-        this(host, PORT_DEFAULT);
+    /**
+     * Creates a new broker with specified host and port values.
+     * @param hostArg the host to connect to
+     * @param portArg the port to connect to
+     */
+    public Broker(final String hostArg, final int portArg) {
+        this.host = hostArg;
+        this.port = portArg;
     }
 
+    /**
+     * Creates a new broker with the specified host and {@link #PORT_DEFAULT}.
+     * @param hostArg the host to connect to
+     */
+    public Broker(final String hostArg) {
+        this(hostArg, PORT_DEFAULT);
+    }
+
+    /**
+     * Gets the host to connect to.
+     * @return the host
+     */
     public String getHost() {
         return host;
     }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
+    /**
+     * Gets the port to connect to.
+     * @return the port
+     */
     public int getPort() {
         return port;
     }
 
-    public void setPort(int port) {
-        this.port = port;
-    }
-
+    /**
+     * The hash code is based on {@code host} and {@code port}.
+     * @return the hash code
+     */
     @Override
     public int hashCode() {
         return Objects.hashCode(host, port);
     }
 
+    /**
+     * The equal comparison is based on  {@code host} and {@code port}.
+     * @param obj the object to compare to
+     * @return {@code true} if this broker and {@code obj} can be considered
+     * equal
+     */
     @Override
-    public boolean equals(Object obj) {
+    public boolean equals(final Object obj) {
         if (this == obj) {
             return true;
         }
@@ -73,9 +107,14 @@ public class Broker implements Serializable, Comparable<Broker> {
             return false;
         }
         final Broker other = (Broker) obj;
-        return Objects.equal(this.host, other.host) && Objects.equal(this.port, other.port);
+        return Objects.equal(this.host, other.getHost())
+                && Objects.equal(this.port, other.getPort());
     }
 
+    /**
+     * String the presentation of this broker.
+     * @return the string representation
+     */
     @Override
     public String toString() {
         return host + ":" + port;
@@ -87,7 +126,7 @@ public class Broker implements Serializable, Comparable<Broker> {
      * {@code [host]:[port]}
      * @return the constructed broker
      */
-    public static Broker fromString(String host) {
+    public static Broker fromString(final String host) {
         Broker hp;
         String[] spec = host.split(":");
         if (spec.length == 1) {
@@ -95,18 +134,27 @@ public class Broker implements Serializable, Comparable<Broker> {
         } else if (spec.length == 2) {
             hp = new Broker(spec[0], Integer.parseInt(spec[1]));
         } else {
-            throw new IllegalArgumentException("Invalid host specification: " + host);
+            throw new IllegalArgumentException("Invalid host specification: "
+                    + host);
         }
         return hp;
     }
 
-
+    /**
+     * Compares this broker to {@code other}.
+     * @param other the broker to compare to
+     * @return {@code 0} if both port and host are equals or a value less than
+     * {@code 0} or more than {@code 0} after applying the logic of
+     * {@link Integer#compare(int, int) } and
+     * {@link String#compareTo(java.lang.String) } on {@code port} and
+     * {@code host}
+     */
     @Override
-    public int compareTo(Broker o) {
-        if (this.host.equals(o.host)) {
-            return this.port - o.port;
+    public int compareTo(final Broker other) {
+        if (this.host.equals(other.getHost())) {
+            return this.port - other.getPort();
         } else {
-            return this.host.compareTo(o.host);
+            return this.host.compareTo(other.getHost());
         }
     }
 }
